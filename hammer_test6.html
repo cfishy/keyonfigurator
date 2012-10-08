@@ -238,8 +238,11 @@
     */
     function write_out() {
       elist = document.getElementsByClassName("towrite");
-      for (var i=0; i < elist.length; i++) { alert(elist[i].innerText + ' l:' + 
-             elist[i].style.left + ' t:' + elist[i].style.top);}
+      var out = ''
+      for (var i=0; i < elist.length; i++) {
+        out += "|" +  elist[i].innerText + ' l:' + elist[i].style.left + ' t:' + elist[i].style.top;
+      }
+      alert(out);
  
     }
 
