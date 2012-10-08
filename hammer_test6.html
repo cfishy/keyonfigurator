@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <style>
+        #container {
+           	width: 1500px;
+		   	height: 700px;
+		   	overflow: hidden;
+			position:relative;
+		  	background: #eee;			
+        }
+		
+	.key {
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            overflow: hidden;
+            opacity: .7;
+            -webkit-transition: -webkit-transform .1s;
+            font-size: 75px;
+            border-style: solid;
+            border-width: 1px;
+            border-color: black;
+            text-align: center;
+        }
+
+        .key2 {
+            position: absolute;
+            width: 115px;
+            height: 90px;
+            overflow: hidden;
+            opacity: .7;
+            -webkit-transition: -webkit-transform .1s;
+            font-size: 75px;
+            border-style: solid;
+            border-width: 1px;
+            border-color: black;
+            text-align: center;
+        }
+
+        .key3 {
+            position: absolute;
+            width: 140px;
+            height: 90px;
+            overflow: hidden;
+            opacity: .7;
+            -webkit-transition: -webkit-transform .1s;
+            font-size: 75px;
+            border-style: solid;
+            border-width: 1px;
+            border-color: black;
+            text-align: center;
+        }
+
+        .spacekey6 {
+            position: absolute;
+            width: 590px;
+            height: 90px;
+            overflow: scroll;
+            opacity: .7;
+            -webkit-transition: -webkit-transform .1s;
+            font-size: 75px;
+            border-style: solid;
+            border-width: 1px;
+            border-color: black;
+            text-align: center;
+        }
+
+        .typed{
+            position: absolute;
+            width: 590px;
+            height: 90px;
+            overflow: scroll;
+            opacity: .7;
+            -webkit-transition: -webkit-transform .1s;
+            font-size: 25px;
+            border-style: solid;
+            border-width: 1px;
+            border-color: black;
+            text-align: left;
+        }
+
+        .box1 { left: 150px; top: 150px; background: wheat; }
+        .box2 { left: 350px; top: 150px; background: red;  }
+        .box3 { left: 500px; top: 150px; background: green; }
+        .box4 { left: 0; top: 150px; background: orange; }
+
+        .type-output {left: 100px; top: 0px; background: wheat; }
+        .toggler { left: 0px; top: 0px; background: pink; font-size: 15px;
+                   position: absolute; width: 80px; height: 25px; text-align: center; }
+        .write-layout {left: 0px; top: 80px; background: green; font-size: 15px;
+                       position:absolute; width: 80px; height: 25px; text-align: center; } 
+
+    </style>
+</head>
+
+<body>
+
+<div id="container">
+        <div class="typed type-output" id="typepad">typed</div> 
+        <div id="toggle" class="toggler" >drag toggler</div>
+	<div class="key box1">A</div>
+	<div class="key box2">B</div>
+	<div class="key box3">C</div>
+	<div class="key2 box4">D</div>
+	<div class="key box1">E</div>
+</div>
+        <div id="writeout" class="write-layout" onclick="write_out();" >drag toggler</div>
+
+	<div id="_debug"></div>
+
+<script src="hammer.js"></script>
+<script>
+
+    var debug_el = document.getElementById("_debug");
+   function debug(str) {
+       debug_el.innerHTML += " "+ str.toString() ;
+   }
+ 
+   // cfish: varible for draggability toggle
+   var draggable = 0;
+  
+    /**
+     * setup hammer
+     */
+    var el = document.getElementById('container');
+
+    var hammer = new Hammer(el, {
+        drag_min_distance: 0,
+        drag_horizontal: true,
+        drag_vertical: true,
+        transform: false,
+        hold: false,
+        prevent_default: true
+    });
+
+    var container_size = el.getBoundingClientRect();
+
+    var drag = {};
+
+    var drag_el;
+    var drag_el_size = {};
+    var drag_timer;
+    var drag_pos = {};
+    var zIndex = 10;
+
+    /**
+     * keep up dragging
+     */
+    function watchDrag()
+    {
+        if(!drag.length) {
+            return;
+        }
+
+        for(var d = 0; d<drag.length; d++) {
+            var left = drag[d].pos.x - (drag[d].size.width / 2);
+            var top = drag[d].pos.y - (drag[d].size.height / 2);
+
+            if(left < 0) {
+                left = 0;
+            }
+            if(top < 0) {
+                top = 0;
+            }
+
+            if(left > container_size.width - drag[d].size.width) {
+                left = container_size.width - drag[d].size.width;
+            }
+            if(top > container_size.height - drag[d].size.height) {
+                top = container_size.height - drag[d].size.height;
+            }
+
+            //cfish: snap to grid
+            var grid_size = 25;
+            left = Math.floor(left / grid_size) * grid_size;
+            top = Math.floor(top / grid_size) * grid_size;
+
+            drag[d].el.style.left = left +'px';
+            drag[d].el.style.top = top +'px';
+        }
+    }
+    
+    /**
+     * on tap
+     */
+    hammer.ontap = function(ev) {
+        var touches = ev.originalEvent.touches || [ev.originalEvent];
+        for(var t=0; t<ev.touches.length; t++) {
+            var el = touches[t].target;
+
+            if(el && el.className.search('key') > -1) {
+                el.style.zIndex = zIndex++;
+                //cfish: get the key's content for display
+                p = document.getElementById('typepad');
+                p.innerText += el.textContent;
+            };
+
+            // cfish: if the draggability toggle is tapped,
+            if (el && el.className.search('toggle') > -1) {
+               p = document.getElementById('toggle');
+               if (p.innerText == "drag") {
+                 p.innerText = "type";
+                 draggable = 0;         
+               } else {
+                 p.innerText = "drag";
+                 draggable = 1;
+               }
+            }
+        }
+    };
+
+    
+    /**
+     * on drag
+     */
+    hammer.ondrag = function(ev) {
+        if (!draggable) { return 0; }
+        drag = [];
+        var touches = ev.originalEvent.touches || [ev.originalEvent];
+        for(var t=0; t<touches.length; t++) {
+            var el = touches[t].target;
+
+            if(el && el.className.search('key') > -1) {
+                drag.push({
+                    el: el,
+                    size: { width: 100, height: 100 },
+                    pos: ev.touches[t]
+                });
+            }
+        }
+    };
+
+    /*
+      on write out button
+    */
+    function write_out() {
+      alert("foo");
+    }
+
+    /* cfish: check if overlapping occurs */
+    function isOverlapping(movedBox, allBoxes) {
+        for (box in allBoxes) {
+          if (movedBox != allBoxes) {
+            if (movedBox.style.left <= box.style.left + box.style.width
+                && movedBox.style.left >= box.style.left
+                && movedBox.style.top <= box.style.top + box.style.height
+                && movedBox.style.top >= box.style.top) {
+              return 0;
+            };
+          };
+        return 1;
+      };
+    };
+
+    setInterval(watchDrag, 10);
+
+</script>
+</body>
+</html>
+
