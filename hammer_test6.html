@@ -22,17 +22,18 @@
             border-style: solid;
             border-width: 1px;
             border-color: black;
+            background: wheat;
             text-align: center;
         }
 
-        .key2 {
+        .small-print-key {
             position: absolute;
             width: 115px;
             height: 90px;
             overflow: hidden;
             opacity: .7;
             -webkit-transition: -webkit-transform .1s;
-            font-size: 75px;
+            font-size: 25px;
             border-style: solid;
             border-width: 1px;
             border-color: black;
@@ -100,13 +101,13 @@
 <div id="container">
         <div class="typed type-output" id="typepad">typed</div> 
         <div id="toggle" class="toggler" >drag toggler</div>
-	<div class="key box1">A</div>
-	<div class="key box2">B</div>
-	<div class="key box3">C</div>
-	<div class="key2 box4">D</div>
-	<div class="key box1">E</div>
+	<div class="key towrite" style="left: 100px; top:200px">A</div>
+	<div class="key box2 towrite" style="left: 100px; top:200px">S</div>
+	<div class="key box3 towrite" style="left: 100px; top:200px">D</div>
+	<div class="key2 box4 towrite" style="left: 100px; top:200px">F</div>
+	<div class="small-print-key towrite" style="left: 100px; top:200px">Capslock</div>
 </div>
-        <div id="writeout" class="write-layout" onclick="write_out();" >drag toggler</div>
+        <div id="writeout" class="write-layout" onclick="write_out();" >write layout</div>
 
 	<div id="_debug"></div>
 
@@ -236,7 +237,10 @@
       on write out button
     */
     function write_out() {
-      alert("foo");
+      elist = document.getElementsByClassName("towrite");
+      for (var i=0; i < elist.length; i++) { alert(elist[i].innerText + ' l:' + 
+             elist[i].style.left + ' t:' + elist[i].style.top);}
+ 
     }
 
     /* cfish: check if overlapping occurs */
