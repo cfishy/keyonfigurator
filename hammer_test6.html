@@ -92,6 +92,9 @@
                    position: absolute; width: 80px; height: 25px; text-align: center; }
         .write-layout {left: 0px; top: 80px; background: green; font-size: 15px;
                        position:absolute; width: 80px; height: 25px; text-align: center; } 
+        .new-normal-key {left: 0px; top: 35px; background: aqua; font-size: 15px;
+                         position: absolute; width: 80px; height: 25px;
+                         text-align: center; }
 
     </style>
 </head>
@@ -108,6 +111,8 @@
 	<div class="small-print-key towrite" style="left: 100px; top:200px">Capslock</div>
 </div>
         <div id="writeout" class="write-layout" onclick="write_out();" >write layout</div>
+        <div id="new-normal-key" class="new-normal-key" 
+             onclick="createNormalKey('randomfoo', 'P');"> new key </div>
 
 	<div id="_debug"></div>
 
