@@ -90,11 +90,11 @@
         .type-output {left: 100px; top: 0px; background: wheat; }
         .toggler { left: 0px; top: 0px; background: pink; font-size: 15px;
                    position: absolute; width: 80px; height: 25px; text-align: center; }
-        .write-layout {left: 0px; top: 80px; background: green; font-size: 15px;
-                       position:absolute; width: 80px; height: 25px; text-align: center; } 
-        .new-normal-key {left: 0px; top: 35px; background: aqua; font-size: 15px;
+        .new-normal-key {left: 0px; top: 25px; background: aqua; font-size: 15px;
                          position: absolute; width: 80px; height: 25px;
                          text-align: center; }
+        .write-layout {left: 0px; top: 50px; background: green; font-size: 15px;
+                       position:absolute; width: 80px; height: 25px; text-align: center; } 
 
     </style>
 </head>
@@ -104,15 +104,16 @@
 <div id="container">
         <div class="typed type-output" id="typepad">typed</div> 
         <div id="toggle" class="toggler" >drag toggler</div>
+        <div id="new-normal-key" class="new-normal-key" 
+             onclick="createNormalKey('randomfoo', 'P');"> new key </div>
+        <div id="writeout" class="write-layout" onclick="write_out();" >write layout</div>
+
 	<div class="key towrite" style="left: 100px; top:200px">A</div>
 	<div class="key towrite" style="left: 100px; top:200px">S</div>
 	<div class="key towrite" style="left: 100px; top:200px">D</div>
 	<div class="key towrite" style="left: 100px; top:200px">F</div>
 	<div class="small-print-key towrite" style="left: 100px; top:200px">Capslock</div>
 </div>
-        <div id="writeout" class="write-layout" onclick="write_out();" >write layout</div>
-        <div id="new-normal-key" class="new-normal-key" 
-             onclick="createNormalKey('randomfoo', 'P');"> new key </div>
 
 	<div id="_debug"></div>
 
@@ -252,14 +253,15 @@
     }
 
     /* cfish: create a normal sized key */ 
-    function createNormalKey(id, legend) {
-      createKey(id, '200px', '200px', '90px', '90px', legend, '50px'); 
+    function createNormalKey(legend, superscript) {
+      createKey('200px', '200px', '90px', '90px', legend, '50px', superscript); 
     }
 
     /* cfish: create a key */
-    function createKey(id, left, top, height, width, legend, fontsize){
+    function createKey(left, top, height, width, legend, fontsize, superscript){
       var newkey = document.createElement('div');
-      newkey.setAttribute('id', id);
+      //no id for now because i am not sure if i need it
+      //newkey.setAttribute('id', id);
       newkey.style.width = width;
       newkey.style.height = height;
       newkey.style.top = top;
@@ -267,10 +269,32 @@
       newkey.style.borderColor = 'black';
       newkey.style.borderWidth = '1px';
       newkey.style.backgroundColor = 'wheat';
-      newkey.style.fontSize = fontsize;
-      newkey.innerText = legend;
       newkey.className = 'key towrite';
       
+
+      /* create a main text area for the new key */
+      t = document.createElement('div');
+      t.style.position = 'abolute';
+      t.style.left = '20px';
+      t.style.top = '20px';
+      t.style.fontSize = fontsize;
+      t.innerText = legend;
+      t.style.position = 'absolute';
+      newkey.appendChild(t);
+
+      /* create a new superscript for this new key*/
+      newsup = document.createElement('div');
+      //newsup.style.width = '80px';
+      newsup.style.position = 'absolute';
+      newsup.style.height = '20px';
+      newsup.style.top = '0px';
+      newsup.style.left = '30px';
+      newsup.style.backgroundColor = 'wheat';
+      newsup.style.fontSize = '20pt';
+      newsup.innerText = superscript;
+      newkey.appendChild(newsup);
+      
+
       con = document.getElementById('container'); 
       con.appendChild(newkey); 
     }
