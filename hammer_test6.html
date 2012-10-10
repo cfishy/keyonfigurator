@@ -87,14 +87,15 @@
         .box3 { left: 500px; top: 150px; background: green; }
         .box4 { left: 0; top: 150px; background: orange; }
 
+        .menu-item {background: white; border-color: black; border-width: 1px;
+                    border-style: solid; font-size: 15px;
+                    position:absolute; width: 80px; height: 24px; text-align:center}
         .type-output {left: 100px; top: 0px; background: wheat; }
-        .toggler { left: 0px; top: 0px; background: pink; font-size: 15px;
-                   position: absolute; width: 80px; height: 25px; text-align: center; }
-        .new-normal-key {left: 0px; top: 25px; background: aqua; font-size: 15px;
-                         position: absolute; width: 80px; height: 25px;
-                         text-align: center; }
-        .write-layout {left: 0px; top: 50px; background: green; font-size: 15px;
-                       position:absolute; width: 80px; height: 25px; text-align: center; } 
+        .toggler { left: 0px; top: 0px; }
+
+        .new-normal-key {left: 0px; top: 25px;}
+        .delete-key {left: 0px; top: 50px;}
+        .write-layout {left: 0px; top: 75px;}
 
     </style>
 </head>
@@ -103,10 +104,11 @@
 
 <div id="container">
         <div class="typed type-output" id="typepad">typed</div> 
-        <div id="toggle" class="toggler" >drag toggler</div>
-        <div id="new-normal-key" class="new-normal-key" 
+        <div id="toggle" class="menu-item toggler" >drag toggler</div>
+        <div id="new-normal-key" class="menu-item new-normal-key" 
              onclick="createNormalKey('P', '*');"> new key </div>
-        <div id="writeout" class="write-layout" onclick="write_out();" >write layout</div>
+        <div id="delete-key" class="menu-item delete-key" onclick="toggleDelete();"> delete key </div>
+        <div id="writeout" class="menu-item write-layout" onclick="write_out();" >write layout</div>
 
 	<div class="key towrite" style="left: 100px; top:200px">A</div>
 	<div class="key towrite" style="left: 100px; top:200px">S</div>
@@ -127,6 +129,8 @@
  
    // cfish: varible for draggability toggle
    var draggable = 0;
+   // cfish: varible to indicate the next click is delete
+   var deleting = 0;
   
     /**
      * setup hammer
@@ -196,6 +200,10 @@
         var touches = ev.originalEvent.touches || [ev.originalEvent];
         for(var t=0; t<ev.touches.length; t++) {
             var el = touches[t].target;
+ 
+            if (deleting) {
+              removeKey(el);
+            }
 
             if(el && el.className.search('key') > -1) {
                 el.style.zIndex = zIndex++;
@@ -239,6 +247,24 @@
         }
     };
 
+    function toggleDelete() {
+      deleting = 1;
+    }
+
+    function removeKey(el) {
+      if (el) {
+        /* the clicked elment can be one of three different types.
+            the key, the text or superscript */
+        if (el.className.search('maintext') > -1 || el.className.search('superscript') > -1) {
+         el.parentElement.parentElement.removeChild(el.parentElement);
+        }
+        if (el && el.className.search('towrite') > -1) {
+          el.parentElement.removeChild(el);
+          deleting = 0;
+        }
+      }
+    }
+
     /*
       on write out button
     */
@@ -253,8 +279,8 @@
     }
 
     /* cfish: create a normal sized key */ 
-    function createNormalKey(legend, superscript) {
-      createKey('200px', '200px', '90px', '90px', legend, '50px', superscript); 
+    function createNormalKey(left, top, legend, superscript) {
+      return createKey(left, top, '90px', '90px', legend, '50px', superscript); 
     }
 
     /* cfish: create a key */
@@ -278,28 +304,33 @@
       t.style.left = '20px';
       t.style.top = '20px';
       t.style.fontSize = fontsize;
+      t.style.borderStyle = 'none';
       t.innerText = legend;
       t.style.position = 'absolute';
+      t.className = 'maintext';
       newkey.appendChild(t);
 
       /* create a new superscript for this new key*/
-      newsup = document.createElement('div');
-      //newsup.style.width = '80px';
-      newsup.style.position = 'absolute';
-      newsup.style.height = '20px';
-      newsup.style.top = '0px';
-      newsup.style.left = '30px';
-      newsup.style.backgroundColor = 'wheat';
-      newsup.style.fontSize = '20pt';
-      newsup.innerText = superscript;
+      if (superscript) {
+	      newsup = document.createElement('div');
+	      newsup.style.position = 'absolute';
+	      newsup.style.height = '20px';
+	      newsup.style.top = '0px';
+	      newsup.style.left = '30px';
+	      newsup.style.backgroundColor = 'wheat';
+	      newsup.style.fontSize = '20pt';
+              newsup.style.borderStyle = 'none';
+              newsup.className = 'superscript';
+	      newsup.innerText = superscript;
       newkey.appendChild(newsup);
-      
+      } 
 
       con = document.getElementById('container'); 
       con.appendChild(newkey); 
+      return newkey;
     }
 
-    /* cfish: check if overlapping occurs */
+    /* cfish: check if overlapping occurs, not working of course. */
     function isOverlapping(movedBox, allBoxes) {
         for (box in allBoxes) {
           if (movedBox != allBoxes) {
