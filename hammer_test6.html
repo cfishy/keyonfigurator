@@ -137,7 +137,7 @@
    // spacing between keys
    var keySpacing = 40
    // cfish: key width slighly less than spacing so it looks better
-   var bevelSize = 2;
+   var bevelSize = 4;
    var keyWidth = keySpacing - bevelSize;
    var keyHeight = keyWidth;
    var mainFontSize = 14;
@@ -342,7 +342,7 @@
       
       //second row: number keys
       left = originalLeft;
-      top = top + keyHeight + gapHeight1;
+      top = top + keySpacing + gapHeight1;
       createNormalKey(left, top, '`', '~');
       left += keySpacing;
       createNormalKey(left, top, '1', '!');
@@ -380,7 +380,7 @@
       
       //third row: tab and QWERTY
       left = originalLeft;
-      top = top + keyHeight;
+      top = top + keySpacing;
       createWideKey(left, top, 1.5, 'tab', '');
       left += keySpacing * 1.5;
       createNormalKey(left, top, 'Q', '');
@@ -418,7 +418,7 @@
        
       //forth row (home row)
       left = originalLeft;
-      top = top + keyHeight;
+      top = top + keySpacing;
       createWideKey(left, top, 1.75, 'tab', '');
       left += keySpacing * 1.75;
       createNormalKey(left, top, 'A', '');
@@ -447,7 +447,7 @@
 
       //fifth row: shift keys row
       left = originalLeft;
-      top = top + keyHeight;
+      top = top + keySpacing;
       createWideKey(left, top, 2.25, 'Shift', '');
       left += keySpacing * 2.25;
       createNormalKey(left, top, 'Z', '');
@@ -478,7 +478,7 @@
       
       //sixth row: space
       left = originalLeft;
-      top = top + keyHeight;
+      top = top + keySpacing;
       createWideKey(left, top, 1.25, 'Ctrl', '');
       left += keySpacing * 1.25;
       createWideKey(left, top, 1.25, 'Wn', '');
