@@ -104,7 +104,7 @@
 <body>
 
 <div id="container">
-        <div class="typed type-output" id="typepad">typed</div> 
+        <div class="typed type-output" id="typepad"></div> 
         <div id="toggle" class="menu-item toggler" >drag toggler</div>
         <div id="new-normal-key" class="menu-item new-normal-key" 
              onclick="createNormalKey('P', '*');"> new key </div>
@@ -250,7 +250,7 @@
             if (el && el.className.search('toggle') > -1) {
                p = document.getElementById('toggle');
                if (p.innerText == "drag") {
-                 p.innerText = "type";
+                 p.innerText = "freeze";
                  draggable = 0;         
                } else {
                  p.innerText = "drag";
