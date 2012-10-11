@@ -224,11 +224,14 @@
             }
 
             // if a key is tapped
+            /* the tap could have been on a child of a key, e.g. superscript */
+            if (el.classList.contains('maintext') || el.classList.contains('superscript')) {
+              el = el.parentElement;
+            }
+
             if(el && el.className.search('key') > -1) {
                 if (draggable) { //dragging
                   el.classList.add('dragging');
-                  p.innerText == 'type';
-                  draggable = 0;
                   el.style.backgroundColor = movingKeyColor;
                   el.style.zIndex = zIndex--;  //bring to front
                 } else {  //typing
@@ -266,6 +269,11 @@
         var touches = ev.originalEvent.touches || [ev.originalEvent];
         for(var t=0; t<touches.length; t++) {
             var el = touches[t].target;
+
+            /* the drag could have been on a child of a key, e.g. superscript */
+            if (el.classList.contains('maintext') || el.classList.contains('superscript')) {
+              el = el.parentElement;
+            }
 
             if(el && el.className.search('dragging') > -1) {
                 drag.push({
