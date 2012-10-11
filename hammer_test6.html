@@ -107,14 +107,16 @@
         <div id="toggle" class="menu-item toggler" >drag toggler</div>
         <div id="new-normal-key" class="menu-item new-normal-key" 
              onclick="createNormalKey('P', '*');"> new key </div>
-        <div id="delete-key" class="menu-item delete-key" onclick="toggleDelete();"> delete key </div>
+        <div id="delete-key" class="menu-item delete-key" onclick="toggleDelete();">delete key</div>
         <div id="writeout" class="menu-item write-layout" onclick="write_out();" >write layout</div>
 
-	<div class="key towrite" style="left: 100px; top:200px">A</div>
+	<!-- test stuff
+
+          div class="key towrite" style="left: 100px; top:200px">A</div>
 	<div class="key towrite" style="left: 100px; top:200px">S</div>
 	<div class="key towrite" style="left: 100px; top:200px">D</div>
 	<div class="key towrite" style="left: 100px; top:200px">F</div>
-	<div class="small-print-key towrite" style="left: 100px; top:200px">Capslock</div>
+	<div class="small-print-key towrite" style="left: 100px; top:200px">Capslock</div--!>
 </div>
 
 	<div id="_debug"></div>
@@ -133,13 +135,20 @@
    var deleting = 0;
    // cfish: FORMATTING contants
    // spacing between keys
-   var keySpacing = 100
+   var keySpacing = 40
    // cfish: key width slighly less than spacing so it looks better
-   var bevelSize = 10;
+   var bevelSize = 2;
    var keyWidth = keySpacing - bevelSize;
    var keyHeight = keyWidth;
-   var mainFontSize = 30;
+   var mainFontSize = 14;
    var keyColor = 'wheat';
+
+   //gap between main keys and arrows, insert, delete, pgup, pgdown
+   var gapWidth1 = 0.25 * keySpacing;
+   // gap between Fn keys and main cluster
+   var gapHeight1 = 0.5 * keySpacing;
+   //gap between funtion keys
+   var functionKeyGap = 0.5 * keySpacing;
 
 
   
@@ -289,8 +298,213 @@
  
     }
 
-    /* cfish: create a ANSI layout */
-    function createAnsiLayout() {
+    /* cfish: create a ANSI layout, no numeric keypad */
+    function createAnsiTenKeyless(left, top) {
+      originalLeft = left;
+      originalTop = top;
+
+      // first row: function keys
+      createNormalKey(left, top, 'Esc', '');
+      left += keySpacing;
+      left += keySpacing;
+      createNormalKey(left, top, 'F1', '');
+      left += keySpacing;
+      createNormalKey(left, top, 'F2', '');
+      left += keySpacing;
+      createNormalKey(left, top, 'F3', '');
+      left += keySpacing;
+      createNormalKey(left, top, 'F4', '');
+      left += keySpacing;
+      left += functionKeyGap;
+      createNormalKey(left, top, 'F5', '');
+      left += keySpacing;
+      createNormalKey(left, top, 'F6', '');
+      left += keySpacing;
+      createNormalKey(left, top, 'F7', '');
+      left += keySpacing;
+      createNormalKey(left, top, 'F8', '');
+      left += keySpacing;
+      left += functionKeyGap;
+      createNormalKey(left, top, 'F9', '');
+      left += keySpacing;
+      createNormalKey(left, top, 'F10', '');
+      left += keySpacing;
+      createNormalKey(left, top, 'F11', '');
+      left += keySpacing;
+      createNormalKey(left, top, 'F12', '');
+      left += keySpacing;
+      left += gapWidth1;
+      createNormalKey(left, top, '', 'prtscrn');
+      left += keySpacing;
+      createNormalKey(left, top, '', 'scrlLock');
+      left += keySpacing;
+      createNormalKey(left, top, '', 'Pause');
+      
+      //second row: number keys
+      left = originalLeft;
+      top = top + keyHeight + gapHeight1;
+      createNormalKey(left, top, '`', '~');
+      left += keySpacing;
+      createNormalKey(left, top, '1', '!');
+      left += keySpacing;
+      createNormalKey(left, top, '2', '@');
+      left += keySpacing;
+      createNormalKey(left, top, '3', '#');
+      left += keySpacing;
+      createNormalKey(left, top, '4', '$');
+      left += keySpacing;
+      createNormalKey(left, top, '5', '%');
+      left += keySpacing;
+      createNormalKey(left, top, '6', '^');
+      left += keySpacing;
+      createNormalKey(left, top, '7', '&');
+      left += keySpacing;
+      createNormalKey(left, top, '8', '*');
+      left += keySpacing;
+      createNormalKey(left, top, '9', '(');
+      left += keySpacing;
+      createNormalKey(left, top, '0', ')');
+      left += keySpacing;
+      createNormalKey(left, top, '-', '_');
+      left += keySpacing;
+      createNormalKey(left, top, '=', '+');
+      left += keySpacing;
+      createWideKey(left, top, 2, 'backspace', '');  
+      left += keySpacing * 2;
+      left += gapWidth1;
+      createNormalKey(left, top, '', 'Ins');
+      left += keySpacing;
+      createNormalKey(left, top, '', 'Home');
+      left += keySpacing;
+      createNormalKey(left, top, '', 'PgUp');
+      
+      //third row: tab and QWERTY
+      left = originalLeft;
+      top = top + keyHeight;
+      createWideKey(left, top, 1.5, 'tab', '');
+      left += keySpacing * 1.5;
+      createNormalKey(left, top, 'Q', '');
+      left += keySpacing;
+      createNormalKey(left, top, 'W', '');
+      left += keySpacing;
+      createNormalKey(left, top, 'E', '');
+      left += keySpacing;
+      createNormalKey(left, top, 'R', '');
+      left += keySpacing;
+      createNormalKey(left, top, 'T', '');
+      left += keySpacing;
+      createNormalKey(left, top, 'Y', '');
+      left += keySpacing;
+      createNormalKey(left, top, 'U', '');
+      left += keySpacing;
+      createNormalKey(left, top, 'I', '');
+      left += keySpacing;
+      createNormalKey(left, top, 'O', '');
+      left += keySpacing;
+      createNormalKey(left, top, 'P', '');
+      left += keySpacing;
+      createNormalKey(left, top, '[', '{');
+      left += keySpacing;
+      createNormalKey(left, top, ']', '}');
+      left += keySpacing;
+      createWideKey(left, top, 1.5, '\\', '|');  
+      left += keySpacing * 1.5;
+      left += gapWidth1
+      createNormalKey(left, top, '', 'Del');
+      left += keySpacing;
+      createNormalKey(left, top, '', 'End');
+      left += keySpacing;
+      createNormalKey(left, top, '', 'PgDn');
+       
+      //forth row (home row)
+      left = originalLeft;
+      top = top + keyHeight;
+      createWideKey(left, top, 1.75, 'tab', '');
+      left += keySpacing * 1.75;
+      createNormalKey(left, top, 'A', '');
+      left += keySpacing;
+      createNormalKey(left, top, 'S', '');
+      left += keySpacing;
+      createNormalKey(left, top, 'D', '');
+      left += keySpacing;
+      createNormalKey(left, top, 'F', '');
+      left += keySpacing;
+      createNormalKey(left, top, 'G', '');
+      left += keySpacing;
+      createNormalKey(left, top, 'H', '');
+      left += keySpacing;
+      createNormalKey(left, top, 'J', '');
+      left += keySpacing;
+      createNormalKey(left, top, 'K', '');
+      left += keySpacing;
+      createNormalKey(left, top, 'L', '');
+      left += keySpacing;
+      createNormalKey(left, top, ';', ':');
+      left += keySpacing;
+      createNormalKey(left, top, '\'', '\"');
+      left += keySpacing;
+      createWideKey(left, top, 2.25, '\\', '|');  
+
+      //fifth row: shift keys row
+      left = originalLeft;
+      top = top + keyHeight;
+      createWideKey(left, top, 2.25, 'Shift', '');
+      left += keySpacing * 2.25;
+      createNormalKey(left, top, 'Z', '');
+      left += keySpacing;
+      createNormalKey(left, top, 'X', '');
+      left += keySpacing;
+      createNormalKey(left, top, 'C', '');
+      left += keySpacing;
+      createNormalKey(left, top, 'V', '');
+      left += keySpacing;
+      createNormalKey(left, top, 'B', '');
+      left += keySpacing;
+      createNormalKey(left, top, 'N', '');
+      left += keySpacing;
+      createNormalKey(left, top, 'M', '');
+      left += keySpacing;
+      createNormalKey(left, top, ',', '<');
+      left += keySpacing;
+      createNormalKey(left, top, '.', '>');
+      left += keySpacing;
+      createNormalKey(left, top, '/', '?');
+      left += keySpacing;
+      createWideKey(left, top, 2.75, 'Shift', '');  
+      left += keySpacing * 2.75;
+      left += gapWidth1
+      left += keySpacing;
+      createNormalKey(left, top, 'upArrow', '');
+      
+      //sixth row: space
+      left = originalLeft;
+      top = top + keyHeight;
+      createWideKey(left, top, 1.25, 'Ctrl', '');
+      left += keySpacing * 1.25;
+      createWideKey(left, top, 1.25, 'Wn', '');
+      left += keySpacing * 1.25;
+      createWideKey(left, top, 1.25, 'Alt', '');
+      left += keySpacing * 1.25;
+
+      createWideKey(left, top, 6.25, 'Space', '');
+      left += keySpacing * 6.25;
+
+      createWideKey(left, top, 1.25, 'Alt', '');
+      left += keySpacing * 1.25;
+      createWideKey(left, top, 1.25, 'Wn', '');
+      left += keySpacing * 1.25;
+      createWideKey(left, top, 1.25, 'Menu', '');
+      left += keySpacing * 1.25;
+      createWideKey(left, top, 1.25, 'Ctrl', '');
+      left += keySpacing * 1.25;
+
+      left += gapWidth1
+      createNormalKey(left, top, '', '<-');
+      left += keySpacing;
+      createNormalKey(left, top, '', 'DnArrow');
+      left += keySpacing;
+      createNormalKey(left, top, '', '->');
+
       return 0; 
     }
 
