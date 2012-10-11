@@ -130,7 +130,8 @@
    var deleting = 0;
    // cfish: FORMATTING contants
    // spacing between keys
-   var keySpacing = 40
+   var keySpacing = 40   // must be divisible by 4
+   var gridSize = keySpacing / 4;
    // cfish: key width slighly less than spacing so it looks better
    var bevelSize = 4;
    var keyWidth = keySpacing - bevelSize;
@@ -199,9 +200,8 @@
             }
 
             //cfish: snap to grid
-            var grid_size = 25;
-            left = Math.floor(left / grid_size) * grid_size;
-            top = Math.floor(top / grid_size) * grid_size;
+            left = Math.floor(left / gridSize) * gridSize;
+            top = Math.floor(top / gridSize) * gridSize;
 
             drag[d].el.style.left = left +'px';
             drag[d].el.style.top = top +'px';
@@ -255,7 +255,7 @@
             if(el && el.className.search('key') > -1) {
                 drag.push({
                     el: el,
-                    size: { width: 100, height: 100 },
+                    size: { width: keySpacing, height: keySpacing },
                     pos: ev.touches[t]
                 });
             }
