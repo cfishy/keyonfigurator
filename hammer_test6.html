@@ -127,10 +127,21 @@
        debug_el.innerHTML += " "+ str.toString() ;
    }
  
-   // cfish: varible for draggability toggle
+   // cfish: flag varible for draggability toggle
    var draggable = 0;
-   // cfish: varible to indicate the next click is delete
+   // cfish: flag varible to indicate the next click is delete
    var deleting = 0;
+   // cfish: FORMATTING contants
+   // spacing between keys
+   var keySpacing = 100
+   // cfish: key width slighly less than spacing so it looks better
+   var bevelSize = 10;
+   var keyWidth = keySpacing - bevelSize;
+   var keyHeight = keyWidth;
+   var mainFontSize = 30;
+   var keyColor = 'wheat';
+
+
   
     /**
      * setup hammer
@@ -278,34 +289,46 @@
  
     }
 
-    /* cfish: create a normal sized key */ 
-    function createNormalKey(left, top, legend, superscript) {
-      return createKey(left, top, '90px', '90px', legend, '50px', superscript); 
+    /* cfish: create a ANSI layout */
+    function createAnsiLayout() {
+      return 0; 
     }
 
+    /* cfish: create a normal sized key */ 
+    function createNormalKey(left, top, mainText, superscript) {
+      return createKey(left, top, keyHeight, keyWidth, mainFontSize, mainText, superscript); 
+    }
+
+
+    function createWideKey(left, top, multiplier, mainText, superscript) {
+      return createKey(left, top, keyHeight, keySpacing * multiplier - bevelSize, mainFontSize,
+                       mainText, superscript);
+    }
+    
+
     /* cfish: create a key */
-    function createKey(left, top, height, width, legend, fontsize, superscript){
+    function createKey(left, top, height, width, fontSize, mainText, superscript) {
       var newkey = document.createElement('div');
       //no id for now because i am not sure if i need it
       //newkey.setAttribute('id', id);
-      newkey.style.width = width;
-      newkey.style.height = height;
-      newkey.style.top = top;
-      newkey.style.left = left;
+      newkey.style.width = width + 'px';
+      newkey.style.height = height + 'px';
+      newkey.style.top = top + 'px';
+      newkey.style.left = left + 'px';
       newkey.style.borderColor = 'black';
       newkey.style.borderWidth = '1px';
-      newkey.style.backgroundColor = 'wheat';
+      newkey.style.backgroundColor = keyColor;
       newkey.className = 'key towrite';
       
 
       /* create a main text area for the new key */
       t = document.createElement('div');
       t.style.position = 'abolute';
-      t.style.left = '20px';
+      t.style.left = '20px'; //TODO: i'll worry about this later.
       t.style.top = '20px';
-      t.style.fontSize = fontsize;
+      t.style.fontSize = fontSize + 'pt';
       t.style.borderStyle = 'none';
-      t.innerText = legend;
+      t.innerText = mainText;
       t.style.position = 'absolute';
       t.className = 'maintext';
       newkey.appendChild(t);
@@ -315,7 +338,7 @@
 	      newsup = document.createElement('div');
 	      newsup.style.position = 'absolute';
 	      newsup.style.height = '20px';
-	      newsup.style.top = '0px';
+	      newsup.style.top = '0px'; //TODO: i'll calculate this later.
 	      newsup.style.left = '30px';
 	      newsup.style.backgroundColor = 'wheat';
 	      newsup.style.fontSize = '20pt';
@@ -330,20 +353,6 @@
       return newkey;
     }
 
-    /* cfish: check if overlapping occurs, not working of course. */
-    function isOverlapping(movedBox, allBoxes) {
-        for (box in allBoxes) {
-          if (movedBox != allBoxes) {
-            if (movedBox.style.left <= box.style.left + box.style.width
-                && movedBox.style.left >= box.style.left
-                && movedBox.style.top <= box.style.top + box.style.height
-                && movedBox.style.top >= box.style.top) {
-              return 0;
-            };
-          };
-        return 1;
-      };
-    };
 
     setInterval(watchDrag, 10);
 
