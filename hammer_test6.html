@@ -217,28 +217,29 @@
         var touches = ev.originalEvent.touches || [ev.originalEvent];
         for(var t=0; t<ev.touches.length; t++) {
             var el = touches[t].target;
- 
-            if (deleting) {
-              removeKey(el);
-            }
 
             // if a key is tapped
             /* the tap could have been on a child of a key, e.g. superscript */
             if (el.classList.contains('maintext') || el.classList.contains('superscript')) {
               el = el.parentElement;
             }
+ 
+            if (deleting) {
+              removeKey(el);
+              return;
+            }
+
 
             if(el && el.className.search('key') > -1) {
                 if (draggable) { //dragging
                   el.classList.add('dragging');
                   el.style.backgroundColor = movingKeyColor;
-                  el.style.zIndex = zIndex--;  //bring to front
+                  el.style.zIndex = zIndex++;  //bring to front
                 } else {  //typing
                   if (el.className.search('dragging') > -1) {
                     el.classList.remove('dragging');
                     el.style.backgroundColor = keyColor;
                   }
-                  //el.style.zIndex = zIndex++;
                   //cfish: get the key's content for display
                   p = document.getElementById('typepad');
                   p.innerText += el.textContent;
@@ -254,10 +255,7 @@
                } else {
                  p.innerText = "drag";
                  draggable = 1;
-                 //untoggle deleting
-                 if (deleting) {
-                   unsetDelete();
-                 }
+                 unsetDelete();
                }
             }
         }
