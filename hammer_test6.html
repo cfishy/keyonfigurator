@@ -133,11 +133,13 @@
    var keySpacing = 40   // must be divisible by 4
    var gridSize = keySpacing / 4;
    // cfish: key width slighly less than spacing so it looks better
+   
    var bevelSize = 4;
    var keyWidth = keySpacing - bevelSize;
    var keyHeight = keyWidth;
    var mainFontSize = 10;
    var keyColor = 'wheat';
+   var movingKeyColor = 'red';
 
    //gap between main keys and arrows, insert, delete, pgup, pgdown
    var gapWidth1 = 0.25 * keySpacing;
@@ -200,6 +202,7 @@
             }
 
             //cfish: snap to grid
+            //TODO: move to earlier line
             left = Math.floor(left / gridSize) * gridSize;
             top = Math.floor(top / gridSize) * gridSize;
 
@@ -220,11 +223,24 @@
               removeKey(el);
             }
 
+            // if a key is tapped
             if(el && el.className.search('key') > -1) {
-                el.style.zIndex = zIndex++;
-                //cfish: get the key's content for display
-                p = document.getElementById('typepad');
-                p.innerText += el.textContent;
+                if (draggable) { //dragging
+                  el.classList.add('dragging');
+                  p.innerText == 'type';
+                  draggable = 0;
+                  el.style.backgroundColor = movingKeyColor;
+                  el.style.zIndex = zIndex--;  //bring to front
+                } else {  //typing
+                  if (el.className.search('dragging') > -1) {
+                    el.classList.remove('dragging');
+                    el.style.backgroundColor = keyColor;
+                  }
+                  //el.style.zIndex = zIndex++;
+                  //cfish: get the key's content for display
+                  p = document.getElementById('typepad');
+                  p.innerText += el.textContent;
+                }
             };
 
             // cfish: if the draggability toggle is tapped,
@@ -246,13 +262,12 @@
      * on drag
      */
     hammer.ondrag = function(ev) {
-        if (!draggable) { return 0; }
         drag = [];
         var touches = ev.originalEvent.touches || [ev.originalEvent];
         for(var t=0; t<touches.length; t++) {
             var el = touches[t].target;
 
-            if(el && el.className.search('key') > -1) {
+            if(el && el.className.search('dragging') > -1) {
                 drag.push({
                     el: el,
                     size: { width: keySpacing, height: keySpacing },
@@ -567,6 +582,9 @@
       return 0; 
     }
 
+    function createDevorak() {
+     //TODO finish
+    }
 
     setInterval(watchDrag, 10);
 
