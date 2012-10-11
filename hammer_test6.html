@@ -187,6 +187,10 @@
             var left = drag[d].pos.x - (drag[d].size.width / 2);
             var top = drag[d].pos.y - (drag[d].size.height / 2);
 
+            //cfish: snap to grid
+            left = Math.floor(left / gridSize) * gridSize;
+            top = Math.floor(top / gridSize) * gridSize;
+
             if(left < 0) {
                 left = 0;
             }
@@ -200,11 +204,6 @@
             if(top > container_size.height - drag[d].size.height) {
                 top = container_size.height - drag[d].size.height;
             }
-
-            //cfish: snap to grid
-            //TODO: move to earlier line
-            left = Math.floor(left / gridSize) * gridSize;
-            top = Math.floor(top / gridSize) * gridSize;
 
             drag[d].el.style.left = left +'px';
             drag[d].el.style.top = top +'px';
