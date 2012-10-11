@@ -89,13 +89,14 @@
 
         .menu-item {background: white; border-color: black; border-width: 1px;
                     border-style: solid; font-size: 15px;
-                    position:absolute; width: 80px; height: 24px; text-align:center}
+                    position:absolute; width: 80px; height: 18px; text-align:center}
         .type-output {left: 100px; top: 0px; background: wheat; }
         .toggler { left: 0px; top: 0px; }
 
-        .new-normal-key {left: 0px; top: 25px;}
-        .delete-key {left: 0px; top: 50px;}
-        .write-layout {left: 0px; top: 75px;}
+        .new-normal-key {left: 0px; top: 20px;}
+        .delete-key {left: 0px; top: 40px;}
+        .generate-ansi {left: 0px; top: 60px; }
+        .write-layout {left: 0px; top: 80px;}
 
     </style>
 </head>
@@ -108,15 +109,9 @@
         <div id="new-normal-key" class="menu-item new-normal-key" 
              onclick="createNormalKey('P', '*');"> new key </div>
         <div id="delete-key" class="menu-item delete-key" onclick="toggleDelete();">delete key</div>
+        <div id="generateANSI" class="menu-item generate-ansi"
+                 onclick="createAnsiTenKeyless(0,150);">ANSI layout</div>
         <div id="writeout" class="menu-item write-layout" onclick="write_out();" >write layout</div>
-
-	<!-- test stuff
-
-          div class="key towrite" style="left: 100px; top:200px">A</div>
-	<div class="key towrite" style="left: 100px; top:200px">S</div>
-	<div class="key towrite" style="left: 100px; top:200px">D</div>
-	<div class="key towrite" style="left: 100px; top:200px">F</div>
-	<div class="small-print-key towrite" style="left: 100px; top:200px">Capslock</div--!>
 </div>
 
 	<div id="_debug"></div>
