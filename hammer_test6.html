@@ -93,8 +93,8 @@
         .type-output {left: 100px; top: 0px; background: wheat; }
         .toggler { left: 0px; top: 0px; }
 
-        .new-normal-key {left: 0px; top: 20px;}
-        .delete-key {left: 0px; top: 40px;}
+        .new-normal {left: 0px; top: 20px;}
+        .delete {left: 0px; top: 40px;}
         .generate-ansi {left: 0px; top: 60px; }
         .write-layout {left: 0px; top: 80px;}
 
@@ -106,9 +106,9 @@
 <div id="container">
         <div class="typed type-output" id="typepad"></div> 
         <div id="toggle" class="menu-item toggler" >drag toggler</div>
-        <div id="new-normal-key" class="menu-item new-normal-key" 
+        <div id="new-normal-key" class="menu-item new-normal" 
              onclick="createNormalKey('P', '*');"> new key </div>
-        <div id="delete-key" class="menu-item delete-key" onclick="toggleDelete();">delete key</div>
+        <div id="delete-key" class="menu-item delete" onclick="setDelete();">delete key</div>
         <div id="generateANSI" class="menu-item generate-ansi"
                  onclick="createAnsiTenKeyless(0,150);">ANSI layout</div>
         <div id="writeout" class="menu-item write-layout" onclick="write_out();" >write layout</div>
@@ -255,6 +255,10 @@
                } else {
                  p.innerText = "drag";
                  draggable = 1;
+                 //untoggle deleting
+                 if (deleting) {
+                   unsetDelete();
+                 }
                }
             }
         }
@@ -285,9 +289,29 @@
         }
     };
 
-    function toggleDelete() {
+
+    // cfish: delete mode
+    function setDelete() {
       deleting = 1;
+      p = document.getElementById('delete-key');
+      p.style.backgroundColor = 'red';
+      //reset draggable flag      
+      if (draggable) {
+        draggable = 0;
+        p = document.getElementById('toggle');
+        p.innerText = 'freeze';
+      }
     }
+
+    function unsetDelete() {
+      if (deleting) {
+          deleting = 0;
+          p = document.getElementById('delete-key');
+          p.style.backgroundColor = 'white';
+
+      }
+    }
+
 
     function removeKey(el) {
       if (el) {
@@ -298,7 +322,7 @@
         }
         if (el && el.className.search('towrite') > -1) {
           el.parentElement.removeChild(el);
-          deleting = 0;
+          unsetDelete();
         }
       }
     }
@@ -500,7 +524,7 @@
       //forth row (home row)
       left = originalLeft;
       top = top + keySpacing;
-      createWideKey(left, top, 1.75, 'tab', '');
+      createWideKey(left, top, 1.75, 'Capslock', '');
       left += keySpacing * 1.75;
       createNormalKey(left, top, 'A', '');
       left += keySpacing;
