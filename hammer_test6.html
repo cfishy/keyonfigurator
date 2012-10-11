@@ -135,7 +135,7 @@
    var bevelSize = 4;
    var keyWidth = keySpacing - bevelSize;
    var keyHeight = keyWidth;
-   var mainFontSize = 14;
+   var mainFontSize = 10;
    var keyColor = 'wheat';
 
    //gap between main keys and arrows, insert, delete, pgup, pgdown
@@ -292,6 +292,70 @@
       alert(out);
  
     }
+
+    /* cfish: create a normal sized key */ 
+    function createNormalKey(left, top, mainText, superscript) {
+      return createKey(left, top, keyHeight, keyWidth, mainFontSize, mainText, superscript); 
+    }
+
+
+    function createWideKey(left, top, multiplier, mainText, superscript) {
+      return createKey(left, top, keyHeight, keySpacing * multiplier - bevelSize, mainFontSize,
+                       mainText, superscript);
+    }
+    
+
+    /* cfish: create a key */
+    function createKey(left, top, height, width, fontSize, mainText, superscript) {
+      var newkey = document.createElement('div');
+      //no id for now because i am not sure if i need it
+      //newkey.setAttribute('id', id);
+      newkey.style.width = width + 'px';
+      newkey.style.height = height + 'px';
+      newkey.style.top = top + 'px';
+      newkey.style.left = left + 'px';
+      newkey.style.borderColor = 'black';
+      newkey.style.borderWidth = '1px';
+      newkey.style.backgroundColor = keyColor;
+      newkey.className = 'key towrite';
+      
+
+      /* create a main text area for the new key */
+      t = document.createElement('div');
+      t.style.position = 'abolute';
+      t.style.width = width;
+      t.style.left = '0px'; //TODO: i'll worry about this later.
+      t.style.top = keySpacing * 0.2 + 'px';
+      t.style.textAlign = 'center';
+      t.style.fontSize = fontSize + 'pt';
+      t.style.borderStyle = 'none';
+      t.innerText = mainText;
+      t.style.position = 'absolute';
+      t.className = 'maintext';
+      newkey.appendChild(t);
+
+      /* create a new superscript for this new key*/
+      if (superscript) {
+	      newsup = document.createElement('div');
+	      newsup.style.position = 'absolute';
+	      newsup.style.height = height + 'px' - t.style.top;
+              newsup.style.width = width;
+	      newsup.style.top = '0px'; //TODO: i'll calculate this later.
+	      newsup.style.left = '0px';
+              newsup.style.textAlign = 'right';
+	      newsup.style.backgroundColor = 'wheat';
+	      newsup.style.fontSize = fontSize / 2 + 'pt';
+              newsup.style.borderStyle = 'none';
+              newsup.className = 'superscript';
+	      newsup.innerText = superscript;
+      newkey.appendChild(newsup);
+      } 
+
+      con = document.getElementById('container'); 
+      con.appendChild(newkey); 
+      return newkey;
+    }
+
 
     /* cfish: create a ANSI layout, no numeric keypad */
     function createAnsiTenKeyless(left, top) {
@@ -469,7 +533,7 @@
       left += keySpacing * 2.75;
       left += gapWidth1
       left += keySpacing;
-      createNormalKey(left, top, 'upArrow', '');
+      createNormalKey(left, top, 'up', '');
       
       //sixth row: space
       left = originalLeft;
@@ -494,72 +558,13 @@
       left += keySpacing * 1.25;
 
       left += gapWidth1
-      createNormalKey(left, top, '', '<-');
+      createNormalKey(left, top, '<-', '');
       left += keySpacing;
-      createNormalKey(left, top, '', 'DnArrow');
+      createNormalKey(left, top, 'down', '');
       left += keySpacing;
-      createNormalKey(left, top, '', '->');
+      createNormalKey(left, top, '->', '');
 
       return 0; 
-    }
-
-    /* cfish: create a normal sized key */ 
-    function createNormalKey(left, top, mainText, superscript) {
-      return createKey(left, top, keyHeight, keyWidth, mainFontSize, mainText, superscript); 
-    }
-
-
-    function createWideKey(left, top, multiplier, mainText, superscript) {
-      return createKey(left, top, keyHeight, keySpacing * multiplier - bevelSize, mainFontSize,
-                       mainText, superscript);
-    }
-    
-
-    /* cfish: create a key */
-    function createKey(left, top, height, width, fontSize, mainText, superscript) {
-      var newkey = document.createElement('div');
-      //no id for now because i am not sure if i need it
-      //newkey.setAttribute('id', id);
-      newkey.style.width = width + 'px';
-      newkey.style.height = height + 'px';
-      newkey.style.top = top + 'px';
-      newkey.style.left = left + 'px';
-      newkey.style.borderColor = 'black';
-      newkey.style.borderWidth = '1px';
-      newkey.style.backgroundColor = keyColor;
-      newkey.className = 'key towrite';
-      
-
-      /* create a main text area for the new key */
-      t = document.createElement('div');
-      t.style.position = 'abolute';
-      t.style.left = '20px'; //TODO: i'll worry about this later.
-      t.style.top = '20px';
-      t.style.fontSize = fontSize + 'pt';
-      t.style.borderStyle = 'none';
-      t.innerText = mainText;
-      t.style.position = 'absolute';
-      t.className = 'maintext';
-      newkey.appendChild(t);
-
-      /* create a new superscript for this new key*/
-      if (superscript) {
-	      newsup = document.createElement('div');
-	      newsup.style.position = 'absolute';
-	      newsup.style.height = '20px';
-	      newsup.style.top = '0px'; //TODO: i'll calculate this later.
-	      newsup.style.left = '30px';
-	      newsup.style.backgroundColor = 'wheat';
-	      newsup.style.fontSize = '20pt';
-              newsup.style.borderStyle = 'none';
-              newsup.className = 'superscript';
-	      newsup.innerText = superscript;
-      newkey.appendChild(newsup);
-      } 
-
-      con = document.getElementById('container'); 
-      con.appendChild(newkey); 
-      return newkey;
     }
 
 
